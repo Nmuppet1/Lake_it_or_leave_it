@@ -8,9 +8,7 @@ export type Swim = {
   lng: number;
   photo_path: string | null;
   review: string | null;
-  water_temp_c: number | null;
   rating: number;
-  conditions: string | null;
   swam_on: string;
   created_at: string;
   username: string | null;
@@ -65,8 +63,4 @@ export async function uploadSwimPhoto(userId: string, file: File): Promise<strin
   });
   if (error) throw error;
   return path;
-}
-
-export function formatTemp(temp: number | null): string {
-  return temp === null ? "—" : `${temp}°C`;
 }

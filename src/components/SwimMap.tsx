@@ -4,7 +4,6 @@ import L from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
 
 import type { Swim } from "@/lib/swims";
-import { formatTemp } from "@/lib/swims";
 
 const pinIcon = (highlight: boolean) =>
   L.divIcon({
@@ -58,15 +57,15 @@ export default function SwimMap({
                   loading="lazy"
                 />
               ) : null}
-              <p className="font-display text-base leading-tight">{swim.spot_name}</p>
+              <p className="font-display text-base leading-tight">{swim.spot_name}</p> 
               <p className="text-xs text-muted-foreground">
-                {formatTemp(swim.water_temp_c)} · {"🌊".repeat(swim.rating)} · {swim.swam_on}
+               {"🌊".repeat(swim.rating)} · {swim.swam_on}
               </p>
               {swim.review ? <p className="text-xs">{swim.review}</p> : null}
             </div>
           </Popup>
         </Marker>
       ))}
-    </MapContainer>
+    </MapContainer> 
   );
-}
+} 

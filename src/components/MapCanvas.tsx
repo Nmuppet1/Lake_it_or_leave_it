@@ -8,7 +8,7 @@ const SwimMap = lazy(() => import("./SwimMap"));
 function MapSkeleton() {
   return (
     <div className="flex h-full w-full items-center justify-center bg-secondary">
-      <span className="label-eyebrow">Loading map…</span>
+      <span className="label-eyebrow">Loading map…</span> 
     </div>
   );
 }
