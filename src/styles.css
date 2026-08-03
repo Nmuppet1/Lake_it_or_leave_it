@@ -176,6 +176,11 @@
   font-family: var(--font-sans);
 }
 
+/* Lift the dark basemap so coastlines and pins stay readable */
+.leaflet-container .leaflet-tile-pane {
+  filter: brightness(1.9) contrast(0.9) saturate(0.85);
+}
+
 .leaflet-container .leaflet-popup-content-wrapper,
 .leaflet-container .leaflet-popup-tip {
   background: var(--color-card);
