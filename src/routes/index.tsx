@@ -68,7 +68,7 @@ function Index() {
       <header className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-6">
         <div>
           <h1 className="text-2xl leading-none">Frozen Assets</h1>
-          <p className="label-eyebrow mt-1">A map of wild swims</p>
+          <p className="label-eyebrow mt-1">A MAP OF SOME PRETTY WILD SWIMS</p>
         </div>
         <nav className="flex items-center gap-2">
           {user ? (
@@ -107,7 +107,7 @@ function Index() {
         </h2>
         {!isLoading && (swims?.length ?? 0) === 0 ? (
           <p className="mt-4 text-sm text-muted-foreground">
-            Nothing here yet. {user ? "Be the first — log a swim." : "Sign in to log the first."}
+            {user ? "Nothing here yet. Be the first — log a swim." : "You should sign in! You can then log some awesome swims ;)"}
           </p>
         ) : null}
         <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
