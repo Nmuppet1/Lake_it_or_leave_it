@@ -34,6 +34,7 @@ export type Database = {
       }
       swims: {
         Row: {
+          conditions: string | null
           created_at: string
           id: string
           lat: number
@@ -44,8 +45,10 @@ export type Database = {
           spot_name: string
           swam_on: string
           user_id: string
+          water_temp_c: number | null
         }
         Insert: {
+          conditions?: string | null
           created_at?: string
           id?: string
           lat: number
@@ -56,8 +59,10 @@ export type Database = {
           spot_name: string
           swam_on?: string
           user_id: string
+          water_temp_c?: number | null
         }
         Update: {
+          conditions?: string | null
           created_at?: string
           id?: string
           lat?: number
@@ -68,6 +73,7 @@ export type Database = {
           spot_name?: string
           swam_on?: string
           user_id?: string
+          water_temp_c?: number | null
         }
         Relationships: []
       }
