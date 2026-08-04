@@ -40,7 +40,7 @@ export const Route = createFileRoute("/swim/$swimId")({
   ),
   notFoundComponent: () => (
     <main className="mx-auto max-w-2xl px-6 py-16">
-      <p className="text-sm text-muted-foreground">This swim no longer exists.</p>
+      <p className="text-sm text-muted-foreground">This swim no longer exists :-(.</p>
     </main>
   ),
 });
@@ -71,20 +71,20 @@ function SwimDetail() {
       invalidate();
     },
     onError: (error) =>
-      toast.error(error instanceof Error ? error.message : "Could not post your comment"),
+      toast.error(error instanceof Error ? error.message : "Could not post your comment whoops"),
   });
 
   const removeMutation = useMutation({
     mutationFn: deleteComment,
     onSuccess: invalidate,
     onError: (error) =>
-      toast.error(error instanceof Error ? error.message : "Could not delete the comment"),
+      toast.error(error instanceof Error ? error.message : "Could not delete the comment whoops hope you said nothing too bad"),
   });
 
   if (isLoading) {
     return (
       <main className="mx-auto max-w-2xl px-6 py-16">
-        <p className="label-eyebrow">Loading swim</p>
+        <p className="label-eyebrow">Loading swim wait a sec</p>
       </main>
     );
   }
@@ -117,7 +117,7 @@ function SwimDetail() {
         <div className="space-y-3 p-6">
           <div className="flex items-baseline justify-between gap-3">
             <h1 className="text-3xl leading-none">{swim.spot_name}</h1>
-            <span className="text-sm text-accent">{"★".repeat(swim.rating)}</span>
+            <span className="text-sm text-accent">{"💧".repeat(swim.rating)}</span>
           </div>
           <p className="label-eyebrow">
             {swim.swam_on} · {swim.username ?? "someone"}
@@ -128,7 +128,7 @@ function SwimDetail() {
 
       <section className="mt-10">
         <h2 className="label-eyebrow">
-          {comments?.length ? `${comments.length} notes on this swim` : "No notes yet"}
+          {comments?.length ? `${comments.length} notes on this swim` : "No notes yet, feel free to add soemthing nice!"}
         </h2>
 
         {user ? (
@@ -143,7 +143,7 @@ function SwimDetail() {
             <Textarea
               value={body}
               onChange={(event) => setBody(event.target.value)}
-              placeholder="How was the water? Any tips for getting in?"
+              placeholder="How was the water? Any tips from when you went?"
               rows={3}
               maxLength={1000}
             />

@@ -135,7 +135,7 @@ function NewSwim() {
                       : "text-2xl leading-none text-muted-foreground/50"
                   }
                 >
-                  ★
+                  💧
                 </button>
               ))}
             </div>

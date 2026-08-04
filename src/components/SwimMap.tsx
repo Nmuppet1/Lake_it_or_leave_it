@@ -59,7 +59,7 @@ export default function SwimMap({
               ) : null}
               <p className="font-display text-base leading-tight">{swim.spot_name}</p> 
               <p className="text-xs text-muted-foreground">
-               {" ★".repeat(swim.rating)} · {swim.swam_on}
+               {"💧".repeat(swim.rating)} · {swim.swam_on}
               </p>
               {swim.review ? <p className="text-xs">{swim.review}</p> : null}
             </div>

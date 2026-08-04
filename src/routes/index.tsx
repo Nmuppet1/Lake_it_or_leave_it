@@ -73,7 +73,7 @@ function SwimCard({
               {swim.spot_name}
             </Link>
           </h3>
-          <span className="text-sm text-accent">{"★".repeat(swim.rating)}</span>
+          <span className="text-sm text-accent">{"💧".repeat(swim.rating)}</span>
         </div>
         <p className="label-eyebrow">
           {swim.swam_on}
