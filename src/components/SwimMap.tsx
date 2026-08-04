@@ -38,7 +38,7 @@ export default function SwimMap({
   zoom = 5,
 }: SwimMapProps) {
   return (
-    <MapContainer center={center} zoom={zoom} scrollWheelZoom wheelPxPerZoomLevel={120} zoomDelta={0.5} zoomSnap={0.25} className="h-full w-full">
+    <MapContainer center={center} zoom={zoom} scrollWheelZoom zoomAnimation fadeAnimation wheelPxPerZoomLevel={100} zoomDelta={0.75} zoomSnap={0.25} className="h-full w-full">
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
