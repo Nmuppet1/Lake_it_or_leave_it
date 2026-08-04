@@ -88,17 +88,6 @@ export async function fetchSwim(swimId: string): Promise<Swim | null> {
   return { ...data, username: profile?.username ?? null, photo_url: photoUrl };
 }
 
-async function uploadSwimPhotoLegacy(userId: string, file: File): Promise<string> {
-  const extension = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
-  const path = `${userId}/${crypto.randomUUID()}.${extension}`;
-  const { error } = await supabase.storage.from("swim-photos").upload(path, file, {
-    cacheControl: "3600",
-    upsert: false,
-  });
-  if (error) throw error;
-  return path;
-}
-
 export async function deleteSwim(swim: { id: string; photo_path: string | null }): Promise<void> {
   const { error } = await supabase.from("swims").delete().eq("id", swim.id);
   if (error) throw error;
