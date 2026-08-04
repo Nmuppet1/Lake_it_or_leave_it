@@ -32,7 +32,7 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Frozen Assets · A map of wild swims" },
       {
         property: "og:description",
-        content: "Drop a pin, add a photo and log the water temperature of your wild swims.",
+        content: "Drop a pin, add a photo and review your wild swims.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -66,8 +66,7 @@ function SwimCard({
           <span className="text-sm text-accent">{"★".repeat(swim.rating)}</span>
         </div>
         <p className="label-eyebrow">
-          {formatTemp(swim.water_temp_c)} · {swim.swam_on}
-          {swim.conditions ? ` · ${swim.conditions}` : ""}
+          {swim.swam_on}
         </p>
         {swim.review ? <p className="text-sm text-foreground/85">{swim.review}</p> : null}
         <div className="flex items-center justify-between gap-2">
@@ -86,7 +85,7 @@ function SwimCard({
                 <AlertDialogHeader>
                   <AlertDialogTitle>Delete this swim?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This will permanently remove {swim.spot_name} and its photo. This cannot be undone.
+                    This will permanently remove {swim.spot_name} and its photo. This cannot be undone!
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -165,7 +164,7 @@ function Index() {
         </h2>
         {!isLoading && (swims?.length ?? 0) === 0 ? (
           <p className="mt-4 text-sm text-muted-foreground">
-            {user ? "Nothing here yet. Be the first — log a swim." : "You should sign in! You can then log some awesome swims ;)"}
+            {user ? "Nothing here yet. Be the first to log a swim." : "You should sign in! You can then log some awesome swims ;)"}
           </p>
         ) : null}
         <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

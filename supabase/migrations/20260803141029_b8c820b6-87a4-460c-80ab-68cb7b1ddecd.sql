@@ -19,9 +19,7 @@ CREATE TABLE public.swims (
   lng double precision NOT NULL,
   photo_path text,
   review text,
-  water_temp_c numeric(4,1),
   rating smallint NOT NULL DEFAULT 3 CHECK (rating BETWEEN 1 AND 5),
-  conditions text,
   swam_on date NOT NULL DEFAULT current_date,
   created_at timestamptz NOT NULL DEFAULT now()
 );

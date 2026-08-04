@@ -16,12 +16,12 @@ export const Route = createFileRoute("/auth")({
       {
         name: "description",
         content:
-          "Sign in to Frozen Assets to log your wild swims, drop a pin on the map and share cold water finds.",
+          "Sign in to Frozen Assets to log your wild swims.",
       },
       { property: "og:title", content: "Sign in · Frozen Assets" },
       {
         property: "og:description",
-        content: "Log wild swims, pin the spot and share the cold water.",
+        content: "Log wild swims.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -67,7 +67,7 @@ function AuthPage() {
         if (error) throw error;
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Something went wrong");
+      toast.error(error instanceof Error ? error.message : "Oh noo something went wrong");
     } finally {
       setBusy(false);
     }
@@ -93,13 +93,13 @@ function AuthPage() {
         <h1 className="text-3xl">{mode === "signin" ? "Welcome back in" : "Join the cold"}</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           {mode === "signin"
-            ? "Sign in to log a swim."
-            : "Pick a name. It shows on the swims you share."}
+            ? "Sign in to log an awesome swim."
+            : "Pick a name. It shows on your shared swims."}
         </p>
 
         {awaitingConfirm ? (
           <p className="mt-6 rounded-md border border-border bg-secondary p-4 text-sm">
-            Check your email to confirm your account, then come back and sign in.
+            Check your email (it might be in junk so unjunk it) and confirm your account, then come back and sign in :-).
           </p>
         ) : (
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
@@ -113,7 +113,7 @@ function AuthPage() {
                   required
                   minLength={2}
                   maxLength={24}
-                  placeholder="icebather"
+                  placeholder="Chilly_Jill123"
                 />
               </div>
             ) : null}
@@ -150,7 +150,7 @@ function AuthPage() {
               onClick={handleGoogle}
               disabled={busy}
             >
-              Continue with Google
+              Continue with a Google login
             </Button>
           </form>
         )}
@@ -163,7 +163,7 @@ function AuthPage() {
             setMode(mode === "signin" ? "signup" : "signin");
           }}
         >
-          {mode === "signin" ? "No account yet? Sign up" : "Already have an account? Sign in"}
+          {mode === "signin" ? "Not cool enough for an account yet? Sign up" : "Already cool enough to have an account? Sign in"}
         </button>
       </div>
     </main>
