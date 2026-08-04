@@ -39,9 +39,7 @@ function NewSwim() {
   const { user } = useAuth();
   const [pin, setPin] = useState<{ lat: number; lng: number } | null>(null);
   const [spotName, setSpotName] = useState("");
-  const [temp, setTemp] = useState("");
   const [rating, setRating] = useState(4);
-  const [conditions, setConditions] = useState("");
   const [swamOn, setSwamOn] = useState(() => new Date().toISOString().slice(0, 10));
   const [review, setReview] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -87,7 +85,7 @@ function NewSwim() {
       </Link>
       <h1 className="mt-6 text-4xl">Log a swim</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        Tap the map to drop a pin, then add the details.
+        Tap on the map to drop a pin, then add the details.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-6">
@@ -98,7 +96,7 @@ function NewSwim() {
           <p className="mt-2 text-xs text-muted-foreground">
             {pin
               ? `Pinned at ${pin.lat.toFixed(4)}, ${pin.lng.toFixed(4)}`
-              : "No pin yet — tap the map."}
+              : "No pin yet, please tap the map."}
           </p>
         </div>
 
@@ -111,20 +109,7 @@ function NewSwim() {
               onChange={(event) => setSpotName(event.target.value)}
               required
               maxLength={80}
-              placeholder="Kailpot Crag, Ullswater"
-            />
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="temp">Water temp (°C)</Label>
-            <Input
-              id="temp"
-              type="number"
-              step="0.1"
-              min="-5"
-              max="40"
-              value={temp}
-              onChange={(event) => setTemp(event.target.value)}
-              placeholder="6.5"
+              placeholder="CVP- Sheffield"
             />
           </div>
           <div className="space-y-1.5">
@@ -135,16 +120,6 @@ function NewSwim() {
               value={swamOn}
               onChange={(event) => setSwamOn(event.target.value)}
               required
-            />
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="conditions">Conditions</Label>
-            <Input
-              id="conditions"
-              value={conditions}
-              onChange={(event) => setConditions(event.target.value)}
-              maxLength={60}
-              placeholder="Clear, light chop, hail"
             />
           </div>
           <div className="space-y-1.5">
@@ -184,13 +159,13 @@ function NewSwim() {
               onChange={(event) => setReview(event.target.value)}
               rows={4}
               maxLength={600}
-              placeholder="Deep, dark and worth the walk in."
+              placeholder="Easy to access, water feels thick and not very clean, great vibes in the sun however"
             />
           </div>
         </div>
 
         <Button type="submit" disabled={busy}>
-          {busy ? "Saving…" : "Log swim"}
+          {busy ? "Saving…" : "Log swim!"}
         </Button>
       </form>
     </main>
