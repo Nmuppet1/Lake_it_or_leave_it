@@ -32,6 +32,41 @@ export type Database = {
         }
         Relationships: []
       }
+      swim_comments: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          swim_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          swim_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          swim_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "swim_comments_swim_id_fkey"
+            columns: ["swim_id"]
+            isOneToOne: false
+            referencedRelation: "swims"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       swims: {
         Row: {
           conditions: string | null
