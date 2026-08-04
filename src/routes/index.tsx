@@ -1,12 +1,24 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { toast } from "sonner";
+import { useState } from "react";
 
 import { MapCanvas } from "@/components/MapCanvas";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { fetchSwims, formatTemp, swimsQueryKey, type Swim } from "@/lib/swims";
+import { deleteSwim, fetchSwims, formatTemp, swimsQueryKey, type Swim } from "@/lib/swims";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -29,7 +41,15 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-function SwimCard({ swim }: { swim: Swim }) {
+function SwimCard({
+  swim,
+  isOwner,
+  onDelete,
+}: {
+  swim: Swim;
+  isOwner: boolean;
+  onDelete: (swim: Swim) => void;
+}) {
   return (
     <article className="surface-frost overflow-hidden rounded-lg">
       {swim.photo_url ? (
@@ -50,7 +70,33 @@ function SwimCard({ swim }: { swim: Swim }) {
           {swim.conditions ? ` · ${swim.conditions}` : ""}
         </p>
         {swim.review ? <p className="text-sm text-foreground/85">{swim.review}</p> : null}
-        <p className="text-xs text-muted-foreground">{swim.username ?? "someone"}</p>
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-xs text-muted-foreground">{swim.username ?? "someone"}</p>
+          {isOwner ? (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <button
+                  type="button"
+                  className="text-xs text-destructive hover:text-destructive/80"
+                >
+                  Delete
+                </button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete this swim?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will permanently remove {swim.spot_name} and its photo. This cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => onDelete(swim)}>Delete</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          ) : null}
+        </div>
       </div>
     </article>
   );
@@ -58,9 +104,21 @@ function SwimCard({ swim }: { swim: Swim }) {
 
 function Index() {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const { data: swims, isLoading } = useQuery({
     queryKey: swimsQueryKey,
     queryFn: fetchSwims,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteSwim,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: swimsQueryKey });
+      toast.success("Swim deleted");
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "Could not delete the swim");
+    },
   });
 
   return (
@@ -112,7 +170,12 @@ function Index() {
         ) : null}
         <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {(swims ?? []).map((swim) => (
-            <SwimCard key={swim.id} swim={swim} />
+            <SwimCard
+              key={swim.id}
+              swim={swim}
+              isOwner={swim.user_id === user?.id}
+              onDelete={(swim) => deleteMutation.mutate(swim)}
+            />
           ))}
         </div>
       </section>
