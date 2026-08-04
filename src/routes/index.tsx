@@ -52,23 +52,40 @@ function SwimCard({
 }) {
   return (
     <article className="surface-frost overflow-hidden rounded-lg">
-      {swim.photo_url ? (
-        <img
-          src={swim.photo_url}
-          alt={`Wild swim at ${swim.spot_name}`}
-          className="h-44 w-full object-cover"
-          loading="lazy"
-        />
-      ) : null}
+      <Link
+        to="/swim/$swimId"
+        params={{ swimId: swim.id }}
+        className="block transition-opacity hover:opacity-90"
+      >
+        {swim.photo_url ? (
+          <img
+            src={swim.photo_url}
+            alt={`Wild swim at ${swim.spot_name}`}
+            className="h-44 w-full object-cover"
+            loading="lazy"
+          />
+        ) : null}
+      </Link>
       <div className="space-y-2 p-5">
         <div className="flex items-baseline justify-between gap-3">
-          <h3 className="text-xl">{swim.spot_name}</h3>
+          <h3 className="text-xl">
+            <Link to="/swim/$swimId" params={{ swimId: swim.id }} className="hover:text-primary">
+              {swim.spot_name}
+            </Link>
+          </h3>
           <span className="text-sm text-accent">{"★".repeat(swim.rating)}</span>
         </div>
         <p className="label-eyebrow">
           {swim.swam_on}
         </p>
         {swim.review ? <p className="text-sm text-foreground/85">{swim.review}</p> : null}
+        <Link
+          to="/swim/$swimId"
+          params={{ swimId: swim.id }}
+          className="block text-xs text-primary hover:underline"
+        >
+          Read & leave a note →
+        </Link>
         <div className="flex items-center justify-between gap-2">
           <p className="text-xs text-muted-foreground">{swim.username ?? "someone"}</p>
           {isOwner ? (
