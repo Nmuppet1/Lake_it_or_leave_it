@@ -19,9 +19,9 @@ function NotFoundComponent() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
+        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found sorry :-(</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+          The page you're looking for doesn't exist or has been moved somewhere secret.
         </p>
         <div className="mt-6">
           <Link
@@ -47,10 +47,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
+          This page didn't load unfortunately :-(
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+          Something went wrong on our end. Try a refresh perhaps?
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -79,15 +79,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Frozen Assets · A map of wild swims" },
+      { title: "Frozen Assets · A map of the wildest swims" },
       {
         name: "description",
-        content: "A quiet map of wild swims: drop a pin, add a photo, log the cold water.",
+        content: "A map of the wildest swims: drop a pin, add a photo, log the cold water.",
       },
       { property: "og:title", content: "Frozen Assets · A map of wild swims" },
       {
         property: "og:description",
-        content: "A quiet map of wild swims: drop a pin, add a photo, log the cold water.",
+        content: "A quiet map of wild swims: log and view some chilly swims.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
