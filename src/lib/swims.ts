@@ -64,6 +64,41 @@ export async function uploadSwimPhoto(userId: string, file: File): Promise<strin
   return path;
 }
 
+export const swimQueryKey = (swimId: string) => ["swim", swimId] as const;
+
+export async function fetchSwim(swimId: string): Promise<Swim | null> {
+  const { data, error } = await supabase.from("swims").select("*").eq("id", swimId).maybeSingle();
+  if (error) throw error;
+  if (!data) return null;
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("username")
+    .eq("id", data.user_id)
+    .maybeSingle();
+
+  let photoUrl: string | null = null;
+  if (data.photo_path) {
+    const { data: signed } = await supabase.storage
+      .from("swim-photos")
+      .createSignedUrl(data.photo_path, 60 * 60);
+    photoUrl = signed?.signedUrl ?? null;
+  }
+
+  return { ...data, username: profile?.username ?? null, photo_url: photoUrl };
+}
+
+async function uploadSwimPhotoLegacy(userId: string, file: File): Promise<string> {
+  const extension = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
+  const path = `${userId}/${crypto.randomUUID()}.${extension}`;
+  const { error } = await supabase.storage.from("swim-photos").upload(path, file, {
+    cacheControl: "3600",
+    upsert: false,
+  });
+  if (error) throw error;
+  return path;
+}
+
 export async function deleteSwim(swim: { id: string; photo_path: string | null }): Promise<void> {
   const { error } = await supabase.from("swims").delete().eq("id", swim.id);
   if (error) throw error;
