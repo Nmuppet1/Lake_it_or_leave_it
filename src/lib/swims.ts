@@ -8,7 +8,9 @@ export type Swim = {
   lng: number;
   photo_path: string | null;
   review: string | null;
+  water_temp_c: number | null;
   rating: number;
+  conditions: string | null;
   swam_on: string;
   created_at: string;
   username: string | null;
@@ -63,4 +65,18 @@ export async function uploadSwimPhoto(userId: string, file: File): Promise<strin
   });
   if (error) throw error;
   return path;
+}
+
+export async function deleteSwim(swim: { id: string; photo_path: string | null }): Promise<void> {
+  const { error } = await supabase.from("swims").delete().eq("id", swim.id);
+  if (error) throw error;
+
+  if (swim.photo_path) {
+    const { error: storageError } = await supabase.storage.from("swim-photos").remove([swim.photo_path]);
+    if (storageError) console.error("Failed to remove photo", storageError);
+  }
+}
+
+export function formatTemp(temp: number | null): string {
+  return temp === null ? "—" : `${temp}°C`;
 }
