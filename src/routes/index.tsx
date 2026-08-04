@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { deleteSwim, fetchSwims, formatTemp, swimsQueryKey, type Swim } from "@/lib/swims";
+import { deleteSwim, fetchSwims, swimsQueryKey, type Swim } from "@/lib/swims";
 
 export const Route = createFileRoute("/")({
   head: () => ({
