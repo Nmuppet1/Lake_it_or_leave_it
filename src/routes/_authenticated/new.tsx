@@ -157,7 +157,7 @@ function NewSwim() {
               onChange={(event) => setReview(event.target.value)}
               rows={4}
               maxLength={600}
-              placeholder="Easy to access, water feels thick and not very clean, great vibes in the sun however"
+              placeholder="Easy to access, water feels thick and not very clean, great vibes in the sun however..."
             />
           </div>
         </div>
