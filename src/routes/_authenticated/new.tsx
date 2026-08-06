@@ -167,6 +167,30 @@ function NewSwim() {
           </div>
         </div>
 
+        <div className="space-y-4">
+          <Label>Spot profile (each out of 5)</Label>
+          <div className="grid gap-5 sm:grid-cols-2">
+            {SWIM_METRICS.map((metric) => (
+              <div key={metric.key} className="space-y-2">
+                <div className="flex items-baseline justify-between">
+                  <span className="text-sm text-foreground/85">{metric.label}</span>
+                  <span className="text-sm text-accent">{metrics[metric.key]}</span>
+                </div>
+                <Slider
+                  aria-label={metric.label}
+                  min={1}
+                  max={5}
+                  step={1}
+                  value={[metrics[metric.key] ?? 3]}
+                  onValueChange={([value]) =>
+                    setMetrics((previous) => ({ ...previous, [metric.key]: value }))
+                  }
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
         <Button type="submit" disabled={busy}>
           {busy ? "Saving…" : "Log swim!"}
         </Button>
