@@ -182,8 +182,8 @@ function NewSwim() {
                   max={5}
                   step={1}
                   value={[metrics[metric.key] ?? 3]}
-                  onValueChange={([value]) =>
-                    setMetrics((previous) => ({ ...previous, [metric.key]: value }))
+                  onValueChange={(values) =>
+                    setMetrics((previous) => ({ ...previous, [metric.key]: values[0] ?? 3 }))
                   }
                 />
               </div>
