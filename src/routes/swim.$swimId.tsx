@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { SwimRadar } from "@/components/SwimRadar";
 import { useAuth } from "@/hooks/useAuth";
 import { addComment, commentsQueryKey, deleteComment, fetchComments } from "@/lib/comments";
 import { fetchSwim, swimQueryKey } from "@/lib/swims";
@@ -125,6 +126,11 @@ function SwimDetail() {
           {swim.review ? <p className="text-sm text-foreground/85">{swim.review}</p> : null}
         </div>
       </article>
+
+      <section className="surface-frost mt-6 rounded-lg p-6">
+        <h2 className="label-eyebrow">SPOT PROFILE</h2>
+        <SwimRadar swim={swim} />
+      </section>
 
       <section className="mt-10">
         <h2 className="label-eyebrow">

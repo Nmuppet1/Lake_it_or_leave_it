@@ -7,10 +7,11 @@ import { MapCanvas } from "@/components/MapCanvas";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { swimsQueryKey, uploadSwimPhoto } from "@/lib/swims";
+import { SWIM_METRICS, swimsQueryKey, uploadSwimPhoto } from "@/lib/swims";
 
 export const Route = createFileRoute("/_authenticated/new")({
   head: () => ({
@@ -44,6 +45,9 @@ function NewSwim() {
   const [review, setReview] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
+  const [metrics, setMetrics] = useState<Record<string, number>>(() =>
+    Object.fromEntries(SWIM_METRICS.map((metric) => [metric.key, 3])),
+  );
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -64,6 +68,7 @@ function NewSwim() {
         review: review.trim() || null,
         rating,
         swam_on: swamOn,
+        ...(metrics as Record<string, number>),
       });
       if (error) throw error;
       await queryClient.invalidateQueries({ queryKey: swimsQueryKey });
