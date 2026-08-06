@@ -19,7 +19,7 @@ export function SwimRadar({ swim }: { swim: Swim }) {
     <div className="h-80 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <RadarChart data={data} outerRadius="72%">
-          <PolarGrid stroke="hsl(var(--border))" strokeOpacity={0.6} />
+          <PolarGrid stroke="var(--border)" strokeOpacity={0.6} />
           <PolarAngleAxis
             dataKey="metric"
             tick={{ fill: "currentColor", fontSize: 11 }}
@@ -28,8 +28,8 @@ export function SwimRadar({ swim }: { swim: Swim }) {
           <PolarRadiusAxis domain={[0, 5]} tickCount={6} tick={false} axisLine={false} />
           <Radar
             dataKey="value"
-            stroke="hsl(var(--primary))"
-            fill="hsl(var(--primary))"
+            stroke="var(--primary)"
+            fill="var(--primary)"
             fillOpacity={0.3}
           />
         </RadarChart>
