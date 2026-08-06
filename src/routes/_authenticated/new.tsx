@@ -7,10 +7,11 @@ import { MapCanvas } from "@/components/MapCanvas";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { swimsQueryKey, uploadSwimPhoto } from "@/lib/swims";
+import { SWIM_METRICS, swimsQueryKey, uploadSwimPhoto } from "@/lib/swims";
 
 export const Route = createFileRoute("/_authenticated/new")({
   head: () => ({
@@ -44,6 +45,9 @@ function NewSwim() {
   const [review, setReview] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
+  const [metrics, setMetrics] = useState<Record<string, number>>(() =>
+    Object.fromEntries(SWIM_METRICS.map((metric) => [metric.key, 3])),
+  );
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -64,6 +68,7 @@ function NewSwim() {
         review: review.trim() || null,
         rating,
         swam_on: swamOn,
+        ...(metrics as Record<string, number>),
       });
       if (error) throw error;
       await queryClient.invalidateQueries({ queryKey: swimsQueryKey });
@@ -159,6 +164,30 @@ function NewSwim() {
               maxLength={600}
               placeholder="Easy to access, water feels thick and not very clean, great vibes in the sun however..."
             />
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <Label>Spot profile (each out of 5)</Label>
+          <div className="grid gap-5 sm:grid-cols-2">
+            {SWIM_METRICS.map((metric) => (
+              <div key={metric.key} className="space-y-2">
+                <div className="flex items-baseline justify-between">
+                  <span className="text-sm text-foreground/85">{metric.label}</span>
+                  <span className="text-sm text-accent">{metrics[metric.key]}</span>
+                </div>
+                <Slider
+                  aria-label={metric.label}
+                  min={1}
+                  max={5}
+                  step={1}
+                  value={[metrics[metric.key] ?? 3]}
+                  onValueChange={(values) =>
+                    setMetrics((previous) => ({ ...previous, [metric.key]: values[0] ?? 3 }))
+                  }
+                />
+              </div>
+            ))}
           </div>
         </div>
 

@@ -13,7 +13,26 @@ export type Swim = {
   created_at: string;
   username: string | null;
   photo_url: string | null;
+  jumpability: number;
+  scenery: number;
+  legality: number;
+  privacy: number;
+  accessibility: number;
+  cleanliness: number;
+  turbidity: number;
+  parking: number;
 };
+
+export const SWIM_METRICS = [
+  { key: "jumpability", label: "Jumpability" },
+  { key: "scenery", label: "Scenery" },
+  { key: "legality", label: "Legality" },
+  { key: "privacy", label: "Privacy" },
+  { key: "accessibility", label: "Access" },
+  { key: "cleanliness", label: "Cleanliness" },
+  { key: "turbidity", label: "Clarity" },
+  { key: "parking", label: "Parking" },
+] as const satisfies ReadonlyArray<{ key: keyof Swim; label: string }>;
 
 export const swimsQueryKey = ["swims"] as const;
 

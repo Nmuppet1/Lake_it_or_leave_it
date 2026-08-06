@@ -69,44 +69,68 @@ export type Database = {
       }
       swims: {
         Row: {
+          accessibility: number
+          cleanliness: number
           conditions: string | null
           created_at: string
           id: string
+          jumpability: number
           lat: number
+          legality: number
           lng: number
+          parking: number
           photo_path: string | null
+          privacy: number
           rating: number
           review: string | null
+          scenery: number
           spot_name: string
           swam_on: string
+          turbidity: number
           user_id: string
           water_temp_c: number | null
         }
         Insert: {
+          accessibility?: number
+          cleanliness?: number
           conditions?: string | null
           created_at?: string
           id?: string
+          jumpability?: number
           lat: number
+          legality?: number
           lng: number
+          parking?: number
           photo_path?: string | null
+          privacy?: number
           rating?: number
           review?: string | null
+          scenery?: number
           spot_name: string
           swam_on?: string
+          turbidity?: number
           user_id: string
           water_temp_c?: number | null
         }
         Update: {
+          accessibility?: number
+          cleanliness?: number
           conditions?: string | null
           created_at?: string
           id?: string
+          jumpability?: number
           lat?: number
+          legality?: number
           lng?: number
+          parking?: number
           photo_path?: string | null
+          privacy?: number
           rating?: number
           review?: string | null
+          scenery?: number
           spot_name?: string
           swam_on?: string
+          turbidity?: number
           user_id?: string
           water_temp_c?: number | null
         }
