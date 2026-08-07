@@ -1,5 +1,6 @@
 import "leaflet/dist/leaflet.css";
 
+import { Link } from "@tanstack/react-router";
 import L from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
 
@@ -57,11 +58,24 @@ export default function SwimMap({
                   loading="lazy"
                 />
               ) : null}
-              <p className="font-display text-base leading-tight">{swim.spot_name}</p> 
+              <Link
+                to="/swim/$swimId"
+                params={{ swimId: swim.id }}
+                className="font-display block text-base leading-tight hover:underline"
+              >
+                {swim.spot_name}
+              </Link>
               <p className="text-xs text-muted-foreground">
                {"💧".repeat(swim.rating)} · {swim.swam_on}
               </p>
               {swim.review ? <p className="text-xs">{swim.review}</p> : null}
+              <Link
+                to="/swim/$swimId"
+                params={{ swimId: swim.id }}
+                className="block text-xs text-primary hover:underline"
+              >
+                Open this swim →
+              </Link>
             </div>
           </Popup>
         </Marker>

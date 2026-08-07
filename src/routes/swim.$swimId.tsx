@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { SwimRadar } from "@/components/SwimRadar";
+import { SwimVisitButton } from "@/components/SwimVisitButton";
 import { useAuth } from "@/hooks/useAuth";
 import { addComment, commentsQueryKey, deleteComment, fetchComments } from "@/lib/comments";
 import { fetchSwim, swimQueryKey } from "@/lib/swims";
@@ -124,6 +125,7 @@ function SwimDetail() {
             {swim.swam_on} · {swim.username ?? "someone"}
           </p>
           {swim.review ? <p className="text-sm text-foreground/85">{swim.review}</p> : null}
+          <SwimVisitButton swimId={swim.id} className="mt-1 inline-block" />
         </div>
       </article>
 

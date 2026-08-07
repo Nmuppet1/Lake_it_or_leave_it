@@ -1,21 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import { useState } from "react";
 
 import { MapCanvas } from "@/components/MapCanvas";
+import { SwimCard } from "@/components/SwimCard";
 import { Button } from "@/components/ui/button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { deleteSwim, fetchSwims, swimsQueryKey, type Swim } from "@/lib/swims";
@@ -41,86 +33,14 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-function SwimCard({
-  swim,
-  isOwner,
-  onDelete,
-}: {
-  swim: Swim;
-  isOwner: boolean;
-  onDelete: (swim: Swim) => void;
-}) {
-  return (
-    <article className="surface-frost overflow-hidden rounded-lg">
-      <Link
-        to="/swim/$swimId"
-        params={{ swimId: swim.id }}
-        className="block transition-opacity hover:opacity-90"
-      >
-        {swim.photo_url ? (
-          <img
-            src={swim.photo_url}
-            alt={`Wild swim at ${swim.spot_name}`}
-            className="h-44 w-full object-cover"
-            loading="lazy"
-          />
-        ) : null}
-      </Link>
-      <div className="space-y-2 p-5">
-        <div className="flex items-baseline justify-between gap-3">
-          <h3 className="text-xl">
-            <Link to="/swim/$swimId" params={{ swimId: swim.id }} className="hover:text-primary">
-              {swim.spot_name}
-            </Link>
-          </h3>
-          <span className="text-sm text-accent">{"💧".repeat(swim.rating)}</span>
-        </div>
-        <p className="label-eyebrow">
-          {swim.swam_on}
-        </p>
-        {swim.review ? <p className="text-sm text-foreground/85">{swim.review}</p> : null}
-        <Link
-          to="/swim/$swimId"
-          params={{ swimId: swim.id }}
-          className="block text-xs text-primary hover:underline"
-        >
-          Read & leave a note →
-        </Link>
-        <div className="flex items-center justify-between gap-2">
-          <p className="text-xs text-muted-foreground">{swim.username ?? "someone"}</p>
-          {isOwner ? (
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <button
-                  type="button"
-                  className="text-xs text-destructive hover:text-destructive/80"
-                >
-                  Delete
-                </button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Delete this swim?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This will permanently remove {swim.spot_name} and its photo. This cannot be undone!
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => onDelete(swim)}>Delete</AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          ) : null}
-        </div>
-      </div>
-    </article>
-  );
-}
-
 function Index() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const [panelOpen, setPanelOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [minRating, setMinRating] = useState("0");
+  const [sort, setSort] = useState("newest");
+
   const { data: swims, isLoading } = useQuery({
     queryKey: swimsQueryKey,
     queryFn: fetchSwims,
@@ -137,14 +57,37 @@ function Index() {
     },
   });
 
+  const filtered = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    const floor = Number(minRating);
+    const list = (swims ?? []).filter((swim) => {
+      const matches =
+        !query ||
+        swim.spot_name.toLowerCase().includes(query) ||
+        (swim.review ?? "").toLowerCase().includes(query) ||
+        (swim.username ?? "").toLowerCase().includes(query);
+      return matches && swim.rating >= floor;
+    });
+
+    return [...list].sort((a, b) => {
+      if (sort === "rating") return b.rating - a.rating;
+      if (sort === "oldest") return a.swam_on.localeCompare(b.swam_on);
+      if (sort === "name") return a.spot_name.localeCompare(b.spot_name);
+      return b.created_at.localeCompare(a.created_at);
+    });
+  }, [swims, search, minRating, sort]);
+
   return (
-    <div className="min-h-screen">
-      <header className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-6">
+    <div className="flex h-screen flex-col overflow-hidden">
+      <header className="flex shrink-0 items-center justify-between gap-4 border-b border-border px-6 py-4">
         <div>
           <h1 className="text-2xl leading-none">Frozen Assets</h1>
           <p className="label-eyebrow mt-1">A MAP OF SOME PRETTY WILD SWIMS</p>
         </div>
         <nav className="flex items-center gap-2">
+          <Button size="sm" variant="ghost" onClick={() => setPanelOpen((open) => !open)}>
+            {panelOpen ? "Hide swims" : `All swims${swims ? ` (${swims.length})` : ""}`}
+          </Button>
           {user ? (
             <>
               <Button asChild size="sm">
@@ -169,32 +112,94 @@ function Index() {
         </nav>
       </header>
 
-      <section className="mx-auto max-w-6xl px-6">
-        <div className="h-[60vh] min-h-80 overflow-hidden rounded-lg border border-border">
-          <MapCanvas swims={swims ?? []} />
-        </div>
-      </section>
+      <div className="relative flex min-h-0 flex-1">
+        <main className="min-h-0 flex-1">
+          <MapCanvas swims={filtered} />
+        </main>
 
-      <section className="mx-auto max-w-6xl px-6 py-10">
-        <h2 className="label-eyebrow">
-          {isLoading ? "Loading swims" : `${swims?.length ?? 0} swims logged`}
-        </h2>
-        {!isLoading && (swims?.length ?? 0) === 0 ? (
-          <p className="mt-4 text-sm text-muted-foreground">
-            {user ? "Nothing here yet. Be the first to log a swim." : "You should sign in! You can then log some awesome swims ;)"}
-          </p>
+        {!panelOpen ? (
+          <button
+            type="button"
+            onClick={() => setPanelOpen(true)}
+            className="surface-frost absolute right-0 top-6 z-[500] rounded-l-lg px-3 py-4 text-xs tracking-[0.18em] uppercase text-muted-foreground hover:text-primary"
+            style={{ writingMode: "vertical-rl" }}
+          >
+            All swims
+          </button>
         ) : null}
-        <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {(swims ?? []).map((swim) => (
-            <SwimCard
-              key={swim.id}
-              swim={swim}
-              isOwner={swim.user_id === user?.id}
-              onDelete={(swim) => deleteMutation.mutate(swim)}
-            />
-          ))}
-        </div>
-      </section>
+
+        <aside
+          className={`absolute right-0 top-0 z-[600] h-full w-full max-w-md border-l border-border bg-background/95 backdrop-blur transition-transform duration-300 sm:w-[26rem] ${
+            panelOpen ? "translate-x-0" : "pointer-events-none translate-x-full"
+          }`}
+          aria-hidden={!panelOpen}
+        >
+          <div className="flex h-full flex-col">
+            <div className="flex items-center justify-between gap-2 border-b border-border px-5 py-4">
+              <h2 className="label-eyebrow">
+                {isLoading ? "LOADING SWIMS" : `${filtered.length} SWIMS`}
+              </h2>
+              <button
+                type="button"
+                onClick={() => setPanelOpen(false)}
+                className="text-xs text-muted-foreground hover:text-foreground"
+              >
+                Close ✕
+              </button>
+            </div>
+
+            <div className="space-y-3 border-b border-border px-5 py-4">
+              <Input
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Search spot, review or swimmer"
+              />
+              <div className="flex gap-2">
+                <Select value={minRating} onValueChange={setMinRating}>
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder="Min rating" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">Any rating</SelectItem>
+                    <SelectItem value="3">3+ 💧</SelectItem>
+                    <SelectItem value="4">4+ 💧</SelectItem>
+                    <SelectItem value="5">5 💧</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select value={sort} onValueChange={setSort}>
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder="Sort" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="newest">Newest first</SelectItem>
+                    <SelectItem value="oldest">Oldest first</SelectItem>
+                    <SelectItem value="rating">Best rated</SelectItem>
+                    <SelectItem value="name">A–Z</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-5 py-5">
+              {!isLoading && filtered.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  {user
+                    ? "No swims match that filter yet."
+                    : "You should sign in! You can then log some awesome swims ;)"}
+                </p>
+              ) : null}
+              {filtered.map((swim: Swim) => (
+                <SwimCard
+                  key={swim.id}
+                  swim={swim}
+                  isOwner={swim.user_id === user?.id}
+                  onDelete={(target) => deleteMutation.mutate(target)}
+                />
+              ))}
+            </div>
+          </div>
+        </aside>
+      </div>
     </div>
   );
 }
