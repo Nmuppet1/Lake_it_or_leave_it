@@ -88,7 +88,6 @@ export type Database = {
           swam_on: string
           turbidity: number
           user_id: string
-          water_temp_c: number | null
         }
         Insert: {
           accessibility?: number
@@ -110,7 +109,6 @@ export type Database = {
           swam_on?: string
           turbidity?: number
           user_id: string
-          water_temp_c?: number | null
         }
         Update: {
           accessibility?: number
@@ -132,7 +130,6 @@ export type Database = {
           swam_on?: string
           turbidity?: number
           user_id?: string
-          water_temp_c?: number | null
         }
         Relationships: []
       }
