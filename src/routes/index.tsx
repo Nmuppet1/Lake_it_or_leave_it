@@ -86,7 +86,7 @@ function Index() {
         </div>
         <nav className="flex items-center gap-2">
           <Button size="sm" variant="ghost" onClick={() => setPanelOpen((open) => !open)}>
-            {panelOpen ? "Hide swims" : `All swims${swims ? ` (${swims.length})` : ""}`}
+            {panelOpen ? "Hide swims page" : `Open swims${swims ? ` (${swims.length})` : ""}`}
           </Button>
           {user ? (
             <>
@@ -124,7 +124,7 @@ function Index() {
             className="surface-frost absolute right-0 top-6 z-[500] rounded-l-lg px-3 py-4 text-xs tracking-[0.18em] uppercase text-muted-foreground hover:text-primary"
             style={{ writingMode: "vertical-rl" }}
           >
-            All swims
+            Open swims
           </button>
         ) : null}
 
@@ -184,7 +184,7 @@ function Index() {
               {!isLoading && filtered.length === 0 ? (
                 <p className="text-sm text-muted-foreground">
                   {user
-                    ? "No swims match that filter yet."
+                    ? "No swims match that filter."
                     : "You should sign in! You can then log some awesome swims ;)"}
                 </p>
               ) : null}

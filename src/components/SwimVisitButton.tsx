@@ -32,7 +32,7 @@ export function SwimVisitButton({
         event.preventDefault();
         event.stopPropagation();
         if (!user) {
-          toast.error("Sign in to say you swam here too");
+          toast.error("Sign in to say you swam here too!");
           return;
         }
         mutation.mutate({ swimId, userId: user.id, visited: mine });

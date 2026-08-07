@@ -74,7 +74,7 @@ export default function SwimMap({
                 params={{ swimId: swim.id }}
                 className="block text-xs text-primary hover:underline"
               >
-                Open this swim →
+                Go to this swim →
               </Link>
             </div>
           </Popup>
