@@ -67,6 +67,35 @@ export type Database = {
           },
         ]
       }
+      swim_visits: {
+        Row: {
+          created_at: string
+          id: string
+          swim_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          swim_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          swim_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "swim_visits_swim_id_fkey"
+            columns: ["swim_id"]
+            isOneToOne: false
+            referencedRelation: "swims"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       swims: {
         Row: {
           accessibility: number
