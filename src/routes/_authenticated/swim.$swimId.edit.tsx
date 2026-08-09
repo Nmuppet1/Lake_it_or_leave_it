@@ -1,6 +1,6 @@
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { MapCanvas } from "@/components/MapCanvas";
@@ -11,39 +11,48 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
-import { SWIM_METRICS, swimsQueryKey, uploadSwimPhoto } from "@/lib/swims";
+import {
+  SWIM_METRICS,
+  fetchSwim,
+  swimQueryKey,
+  swimsQueryKey,
+  updateSwim,
+  uploadSwimPhoto,
+} from "@/lib/swims";
 
-export const Route = createFileRoute("/_authenticated/new")({
+export const Route = createFileRoute("/_authenticated/swim/$swimId/edit")({
   head: () => ({
     meta: [
-      { title: "Log a swim · Frozen Assets" },
+      { title: "Edit a swim · Frozen Assets" },
       {
         name: "description",
-        content:
-          "Drop a pin where you swam, add a photo, water temperature, rating and a short review.",
+        content: "Change the pin, photo, rating or review of a wild swim you logged.",
       },
-      { property: "og:title", content: "Log a swim · Frozen Assets" },
-      {
-        property: "og:description",
-        content: "Pin the spot, add a photo and log the water temperature.",
-      },
+      { property: "og:title", content: "Edit a swim · Frozen Assets" },
+      { property: "og:description", content: "Update the details of a swim you logged." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: NewSwim,
+  component: EditSwim,
 });
 
-function NewSwim() {
+function EditSwim() {
+  const { swimId } = Route.useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user } = useAuth();
+
+  const { data: swim, isLoading } = useQuery({
+    queryKey: swimQueryKey(swimId),
+    queryFn: () => fetchSwim(swimId),
+  });
+
   const [pin, setPin] = useState<{ lat: number; lng: number } | null>(null);
   const [flyTo, setFlyTo] = useState<{ lat: number; lng: number; zoom?: number } | null>(null);
   const [spotName, setSpotName] = useState("");
   const [rating, setRating] = useState(4);
-  const [swamOn, setSwamOn] = useState(() => new Date().toISOString().slice(0, 10));
+  const [swamOn, setSwamOn] = useState("");
   const [review, setReview] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
@@ -51,33 +60,81 @@ function NewSwim() {
     Object.fromEntries(SWIM_METRICS.map((metric) => [metric.key, 3])),
   );
 
+  useEffect(() => {
+    if (!swim) return;
+    setPin({ lat: swim.lat, lng: swim.lng });
+    setFlyTo({ lat: swim.lat, lng: swim.lng });
+    setSpotName(swim.spot_name);
+    setRating(swim.rating);
+    setSwamOn(swim.swam_on);
+    setReview(swim.review ?? "");
+    setMetrics(
+      Object.fromEntries(
+        SWIM_METRICS.map((metric) => [metric.key, Number(swim[metric.key] ?? 3)]),
+      ),
+    );
+  }, [swim]);
+
+  if (isLoading) {
+    return (
+      <main className="mx-auto max-w-3xl px-6 py-16">
+        <p className="label-eyebrow">Loading swim…</p>
+      </main>
+    );
+  }
+
+  if (!swim) {
+    return (
+      <main className="mx-auto max-w-3xl px-6 py-16">
+        <p className="text-sm text-muted-foreground">This swim no longer exists.</p>
+        <Link to="/" className="mt-4 inline-block text-sm text-primary">
+          Back to the map
+        </Link>
+      </main>
+    );
+  }
+
+  if (swim.user_id !== user?.id) {
+    return (
+      <main className="mx-auto max-w-3xl px-6 py-16">
+        <p className="text-sm text-muted-foreground">You can only edit your own swims.</p>
+        <Link
+          to="/swim/$swimId"
+          params={{ swimId }}
+          className="mt-4 inline-block text-sm text-primary"
+        >
+          Back to this swim
+        </Link>
+      </main>
+    );
+  }
+
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-    if (!user) return;
+    if (!swim || !user) return;
     if (!pin) {
       toast.error("Tap the map to drop a pin where you swam");
       return;
     }
     setBusy(true);
     try {
-      const photoPath = file ? await uploadSwimPhoto(user.id, file) : null;
-      const { error } = await supabase.from("swims").insert({
-        user_id: user.id,
+      const photoPath = file ? await uploadSwimPhoto(user.id, file) : undefined;
+      await updateSwim(swim.id, {
         spot_name: spotName.trim(),
         lat: pin.lat,
         lng: pin.lng,
-        photo_path: photoPath,
         review: review.trim() || null,
         rating,
         swam_on: swamOn,
+        ...(photoPath ? { photo_path: photoPath } : {}),
         ...(metrics as Record<string, number>),
       });
-      if (error) throw error;
       await queryClient.invalidateQueries({ queryKey: swimsQueryKey });
-      toast.success("Swim logged");
-      void navigate({ to: "/" });
+      await queryClient.invalidateQueries({ queryKey: swimQueryKey(swim.id) });
+      toast.success("Swim updated");
+      void navigate({ to: "/swim/$swimId", params: { swimId: swim.id } });
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Could not save the swim :-(");
+      toast.error(error instanceof Error ? error.message : "Could not update the swim :-(");
     } finally {
       setBusy(false);
     }
@@ -85,19 +142,29 @@ function NewSwim() {
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-10">
-      <Link to="/" className="label-eyebrow hover:text-foreground">
-        ← Back to swims
+      <Link
+        to="/swim/$swimId"
+        params={{ swimId }}
+        className="label-eyebrow hover:text-foreground"
+      >
+        ← Back to this swim
       </Link>
-      <h1 className="mt-6 text-4xl">Log a swim</h1>
+      <h1 className="mt-6 text-4xl">Edit swim</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        Tap on the map to drop a pin, then add some fun details.
+        Move the pin, change the details or swap the photo.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-6">
         <div className="space-y-3">
-          <PlaceSearch onPick={(place) => setFlyTo({ lat: place.lat, lng: place.lng, zoom: 14 })} />
+          <PlaceSearch
+            onPick={(place) => setFlyTo({ lat: place.lat, lng: place.lng, zoom: 14 })}
+          />
           <div className="h-72 overflow-hidden rounded-lg border border-border">
-            <MapCanvas pin={pin} flyTo={flyTo} onPick={(lat, lng) => setPin({ lat, lng })} />
+            <MapCanvas
+              pin={pin}
+              flyTo={flyTo}
+              onPick={(lat, lng) => setPin({ lat, lng })}
+            />
           </div>
           <p className="text-xs text-muted-foreground">
             {pin
@@ -115,7 +182,6 @@ function NewSwim() {
               onChange={(event) => setSpotName(event.target.value)}
               required
               maxLength={80}
-              placeholder="CVP- Sheffield"
             />
           </div>
           <div className="space-y-1.5">
@@ -149,7 +215,7 @@ function NewSwim() {
             </div>
           </div>
           <div className="space-y-1.5 sm:col-span-2">
-            <Label htmlFor="photo">Photo</Label>
+            <Label htmlFor="photo">Replace photo</Label>
             <Input
               id="photo"
               type="file"
@@ -165,7 +231,6 @@ function NewSwim() {
               onChange={(event) => setReview(event.target.value)}
               rows={4}
               maxLength={600}
-              placeholder="Easy to access, water feels thick and not very clean, great vibes in the sun however..."
             />
           </div>
         </div>
@@ -195,7 +260,7 @@ function NewSwim() {
         </div>
 
         <Button type="submit" disabled={busy}>
-          {busy ? "Saving…" : "Log swim!"}
+          {busy ? "Saving…" : "Save changes"}
         </Button>
       </form>
     </main>

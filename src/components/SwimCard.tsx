@@ -18,13 +18,20 @@ export function SwimCard({
   swim,
   isOwner,
   onDelete,
+  highlight = false,
 }: {
   swim: Swim;
   isOwner: boolean;
   onDelete: (swim: Swim) => void;
+  highlight?: boolean;
 }) {
   return (
-    <article className="surface-frost relative overflow-hidden rounded-lg transition-colors hover:border-primary/50">
+    <article
+      id={`swim-card-${swim.id}`}
+      className={`surface-frost relative overflow-hidden rounded-lg transition-colors hover:border-primary/50 ${
+        highlight ? "border-accent ring-2 ring-accent/60" : ""
+      }`}
+    >
       <Link
         to="/swim/$swimId"
         params={{ swimId: swim.id }}
@@ -40,6 +47,7 @@ export function SwimCard({
         />
       ) : null}
       <div className="space-y-2 p-5">
+        {highlight ? <p className="label-eyebrow text-accent">SWIM OF THE DAY</p> : null}
         <div className="flex items-baseline justify-between gap-3">
           <h3 className="text-xl">{swim.spot_name}</h3>
           <span className="text-sm text-accent">{"💧".repeat(swim.rating)}</span>
@@ -53,7 +61,15 @@ export function SwimCard({
           <p className="text-xs text-muted-foreground">{swim.username ?? "someone"}</p>
         </div>
         {isOwner ? (
-          <AlertDialog>
+          <div className="relative z-10 flex items-center gap-3 pt-1">
+            <Link
+              to="/swim/$swimId/edit"
+              params={{ swimId: swim.id }}
+              className="text-xs text-primary hover:text-primary/80"
+            >
+              Edit
+            </Link>
+            <AlertDialog>
             <AlertDialogTrigger asChild>
               <button
                 type="button"
@@ -74,7 +90,8 @@ export function SwimCard({
                 <AlertDialogAction onClick={() => onDelete(swim)}>Delete</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
-          </AlertDialog>
+            </AlertDialog>
+          </div>
         ) : null}
       </div>
     </article>
