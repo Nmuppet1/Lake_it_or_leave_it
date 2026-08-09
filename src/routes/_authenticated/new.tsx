@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { MapCanvas } from "@/components/MapCanvas";
+import { PlaceSearch } from "@/components/PlaceSearch";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -39,6 +40,7 @@ function NewSwim() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const [pin, setPin] = useState<{ lat: number; lng: number } | null>(null);
+  const [flyTo, setFlyTo] = useState<{ lat: number; lng: number; zoom?: number } | null>(null);
   const [spotName, setSpotName] = useState("");
   const [rating, setRating] = useState(4);
   const [swamOn, setSwamOn] = useState(() => new Date().toISOString().slice(0, 10));
@@ -92,11 +94,12 @@ function NewSwim() {
       </p>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-        <div>
+        <div className="space-y-3">
+          <PlaceSearch onPick={(place) => setFlyTo({ lat: place.lat, lng: place.lng, zoom: 14 })} />
           <div className="h-72 overflow-hidden rounded-lg border border-border">
-            <MapCanvas pin={pin} onPick={(lat, lng) => setPin({ lat, lng })} />
+            <MapCanvas pin={pin} flyTo={flyTo} onPick={(lat, lng) => setPin({ lat, lng })} />
           </div>
-          <p className="mt-2 text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground">
             {pin
               ? `Pinned at ${pin.lat.toFixed(4)}, ${pin.lng.toFixed(4)}`
               : "No pin yet, so please tap the map."}
