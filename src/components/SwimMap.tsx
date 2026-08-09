@@ -2,7 +2,8 @@ import "leaflet/dist/leaflet.css";
 
 import { Link } from "@tanstack/react-router";
 import L from "leaflet";
-import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
+import { useEffect } from "react";
+import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from "react-leaflet";
 
 import type { Swim } from "@/lib/swims";
 
@@ -23,12 +24,21 @@ function ClickCapture({ onPick }: { onPick: (lat: number, lng: number) => void }
   return null;
 }
 
+function FlyTo({ target }: { target: { lat: number; lng: number; zoom?: number } }) {
+  const map = useMap();
+  useEffect(() => {
+    map.flyTo([target.lat, target.lng], target.zoom ?? 14, { duration: 1.2 });
+  }, [map, target]);
+  return null;
+}
+
 export type SwimMapProps = {
   swims?: Swim[];
   pin?: { lat: number; lng: number } | null;
   onPick?: (lat: number, lng: number) => void;
   center?: [number, number];
   zoom?: number;
+  flyTo?: { lat: number; lng: number; zoom?: number } | null;
 };
 
 export default function SwimMap({
@@ -37,6 +47,7 @@ export default function SwimMap({
   onPick,
   center = [54.5, -3.5],
   zoom = 5,
+  flyTo = null,
 }: SwimMapProps) {
   return (
     <MapContainer center={center} zoom={zoom} scrollWheelZoom zoomAnimation fadeAnimation wheelPxPerZoomLevel={120} zoomDelta={1} zoomSnap={0.5} className="h-full w-full">
@@ -45,6 +56,7 @@ export default function SwimMap({
         url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
       />
       {onPick ? <ClickCapture onPick={onPick} /> : null}
+      {flyTo ? <FlyTo target={flyTo} /> : null}
       {pin ? <Marker position={[pin.lat, pin.lng]} icon={pinIcon(true)} /> : null}
       {swims.map((swim) => (
         <Marker key={swim.id} position={[swim.lat, swim.lng]} icon={pinIcon(false)}>
