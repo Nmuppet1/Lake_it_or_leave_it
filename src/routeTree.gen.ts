@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedNewRouteImport } from './routes/_authenticated/new'
 import { Route as SwimSwimIdRouteImport } from './routes/swim.$swimId'
+import { Route as AuthenticatedSwimSwimIdEditRouteImport } from './routes/_authenticated/swim.$swimId.edit'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -39,18 +40,26 @@ const SwimSwimIdRoute = SwimSwimIdRouteImport.update({
   path: '/swim/$swimId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedSwimSwimIdEditRoute =
+  AuthenticatedSwimSwimIdEditRouteImport.update({
+    id: '/swim/$swimId/edit',
+    path: '/swim/$swimId/edit',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/new': typeof AuthenticatedNewRoute
   '/swim/$swimId': typeof SwimSwimIdRoute
+  '/swim/$swimId/edit': typeof AuthenticatedSwimSwimIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/new': typeof AuthenticatedNewRoute
   '/swim/$swimId': typeof SwimSwimIdRoute
+  '/swim/$swimId/edit': typeof AuthenticatedSwimSwimIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -59,12 +68,13 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/new': typeof AuthenticatedNewRoute
   '/swim/$swimId': typeof SwimSwimIdRoute
+  '/_authenticated/swim/$swimId/edit': typeof AuthenticatedSwimSwimIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/new' | '/swim/$swimId'
+  fullPaths: '/' | '/auth' | '/new' | '/swim/$swimId' | '/swim/$swimId/edit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/new' | '/swim/$swimId'
+  to: '/' | '/auth' | '/new' | '/swim/$swimId' | '/swim/$swimId/edit'
   id:
     | '__root__'
     | '/'
@@ -72,6 +82,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/new'
     | '/swim/$swimId'
+    | '/_authenticated/swim/$swimId/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -118,15 +129,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SwimSwimIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/swim/$swimId/edit': {
+      id: '/_authenticated/swim/$swimId/edit'
+      path: '/swim/$swimId/edit'
+      fullPath: '/swim/$swimId/edit'
+      preLoaderRoute: typeof AuthenticatedSwimSwimIdEditRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedNewRoute: typeof AuthenticatedNewRoute
+  AuthenticatedSwimSwimIdEditRoute: typeof AuthenticatedSwimSwimIdEditRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedNewRoute: AuthenticatedNewRoute,
+  AuthenticatedSwimSwimIdEditRoute: AuthenticatedSwimSwimIdEditRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

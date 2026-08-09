@@ -125,7 +125,18 @@ function SwimDetail() {
             {swim.swam_on} · {swim.username ?? "someone"}
           </p>
           {swim.review ? <p className="text-sm text-foreground/85">{swim.review}</p> : null}
-          <SwimVisitButton swimId={swim.id} className="mt-1 inline-block" />
+          <div className="flex items-center gap-4 pt-1">
+            <SwimVisitButton swimId={swim.id} className="inline-block" />
+            {swim.user_id === user?.id ? (
+              <Link
+                to="/swim/$swimId/edit"
+                params={{ swimId: swim.id }}
+                className="text-xs text-primary hover:text-primary/80"
+              >
+                Edit swim
+              </Link>
+            ) : null}
+          </div>
         </div>
       </article>
 

@@ -116,3 +116,29 @@ export async function deleteSwim(swim: { id: string; photo_path: string | null }
     if (storageError) console.error("Failed to remove photo", storageError);
   }
 }
+
+export type SwimUpdate = {
+  spot_name: string;
+  lat: number;
+  lng: number;
+  review: string | null;
+  rating: number;
+  swam_on: string;
+  photo_path?: string | null;
+} & Partial<Record<(typeof SWIM_METRICS)[number]["key"], number>>;
+
+export async function updateSwim(swimId: string, patch: SwimUpdate): Promise<void> {
+  const { error } = await supabase.from("swims").update(patch).eq("id", swimId);
+  if (error) throw error;
+}
+
+/** Most recent swim among the best rated ones from the last week (falls back to all time). */
+export function pickSwimOfTheDay(swims: Swim[]): Swim | null {
+  if (swims.length === 0) return null;
+  const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const recent = swims.filter((swim) => new Date(swim.created_at).getTime() >= weekAgo);
+  const pool = recent.length > 0 ? recent : swims;
+  return [...pool].sort(
+    (a, b) => b.rating - a.rating || b.created_at.localeCompare(a.created_at),
+  )[0] ?? null;
+}
