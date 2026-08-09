@@ -10,7 +10,13 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { deleteSwim, fetchSwims, swimsQueryKey, type Swim } from "@/lib/swims";
+import {
+  deleteSwim,
+  fetchSwims,
+  pickSwimOfTheDay,
+  swimsQueryKey,
+  type Swim,
+} from "@/lib/swims";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -77,6 +83,20 @@ function Index() {
     });
   }, [swims, search, minRating, sort]);
 
+  const swimOfTheDay = useMemo(() => pickSwimOfTheDay(swims ?? []), [swims]);
+
+  function revealSwimOfTheDay() {
+    if (!swimOfTheDay) return;
+    setSearch("");
+    setMinRating("0");
+    setPanelOpen(true);
+    requestAnimationFrame(() => {
+      document
+        .getElementById(`swim-card-${swimOfTheDay.id}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  }
+
   return (
     <div className="flex h-screen flex-col overflow-hidden">
       <header className="flex shrink-0 items-center justify-between gap-4 border-b border-border px-6 py-4">
@@ -88,6 +108,16 @@ function Index() {
           <Button size="sm" variant="ghost" onClick={() => setPanelOpen((open) => !open)}>
             {panelOpen ? "Hide swims page" : `Open swims${swims ? ` (${swims.length})` : ""}`}
           </Button>
+          {swimOfTheDay ? (
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-accent text-accent hover:text-accent"
+              onClick={revealSwimOfTheDay}
+            >
+              Swim of the day: {swimOfTheDay.spot_name}
+            </Button>
+          ) : null}
           {user ? (
             <>
               <Button asChild size="sm">
@@ -193,6 +223,7 @@ function Index() {
                   key={swim.id}
                   swim={swim}
                   isOwner={swim.user_id === user?.id}
+                  highlight={swim.id === swimOfTheDay?.id}
                   onDelete={(target) => deleteMutation.mutate(target)}
                 />
               ))}
