@@ -105,10 +105,7 @@ function Index() {
           <p className="label-eyebrow mt-1">A MAP OF SOME PRETTY WILD SWIMS</p>
         </div>
         <nav className="flex items-center gap-2">
-          <Button size="sm" variant="ghost" onClick={() => setPanelOpen((open) => !open)}>
-            {panelOpen ? "Hide swims page" : `Open swims${swims ? ` (${swims.length})` : ""}`}
-          </Button>
-          {swimOfTheDay ? (
+            {swimOfTheDay ? (
             <Button
               size="sm"
               variant="outline"
@@ -118,6 +115,10 @@ function Index() {
               Swim of the day: {swimOfTheDay.spot_name}
             </Button>
           ) : null}
+          <Button size="sm" variant="ghost" onClick={() => setPanelOpen((open) => !open)}>
+            {panelOpen ? "Hide swims page" : `Open swims${swims ? ` (${swims.length})` : ""}`}
+          </Button>
+
           {user ? (
             <>
               <Button asChild size="sm">

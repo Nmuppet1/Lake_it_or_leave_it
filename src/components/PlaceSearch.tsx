@@ -37,9 +37,9 @@ export function PlaceSearch({
         lng: Number(item.lon),
       }));
       setResults(found);
-      if (found.length === 0) setMessage("Nothing found for that, try a nearby town or river name.");
+      if (found.length === 0) setMessage("Sorry, nothing found for that :-(");
     } catch {
-      setMessage("Could not search places right now.");
+      setMessage("Whoops, can't search places right now :-(");
     } finally {
       setBusy(false);
     }
@@ -57,11 +57,11 @@ export function PlaceSearch({
               void search();
             }
           }}
-          placeholder="Search a place, lake or river…"
+          placeholder="Search for a location here"
           aria-label="Search for a place on the map"
         />
         <Button type="button" variant="outline" onClick={() => void search()} disabled={busy}>
-          {busy ? "Searching…" : "Search"}
+          {busy ? "Looking for it..." : "Search"}
         </Button>
       </div>
       {message ? <p className="text-xs text-muted-foreground">{message}</p> : null}

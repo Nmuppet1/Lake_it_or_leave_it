@@ -47,7 +47,7 @@ export function SwimCard({
         />
       ) : null}
       <div className="space-y-2 p-5">
-        {highlight ? <p className="label-eyebrow text-accent">SWIM OF THE DAY</p> : null}
+        {highlight ? <p className="label-eyebrow text-accent">SWIM OF THE DAY!</p> : null}
         <div className="flex items-baseline justify-between gap-3">
           <h3 className="text-xl">{swim.spot_name}</h3>
           <span className="text-sm text-accent">{"💧".repeat(swim.rating)}</span>
