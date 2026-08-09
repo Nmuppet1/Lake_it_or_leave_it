@@ -152,7 +152,7 @@ function Index() {
               <Input
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search spot, review or swimmer"
+                placeholder="Search for a spot, review or a swimmer"
               />
               <div className="flex gap-2">
                 <Select value={minRating} onValueChange={setMinRating}>
