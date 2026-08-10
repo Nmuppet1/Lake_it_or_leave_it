@@ -79,12 +79,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Frozen Assets · A map of the wildest swims" },
+      { title: "Lake it or leave it · A map of the wildest swims" },
       {
         name: "description",
         content: "A map of the wildest swims: drop a pin, add a photo, log the cold water.",
       },
-      { property: "og:title", content: "Frozen Assets · A map of wild swims" },
+      { property: "og:title", content: "Lake it or leave it · A map of wild swims" },
       {
         property: "og:description",
         content: "A quiet map of wild swims: log and view some chilly swims.",

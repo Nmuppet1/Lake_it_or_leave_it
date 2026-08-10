@@ -21,13 +21,13 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Frozen Assets · A map of wild swims" },
+      { title: "Lake it or leave it · A map of wild swims" },
       {
         name: "description",
         content:
-          "Frozen Assets is a quiet map of wild swims. Drop a pin, add a photo, log the water temperature and share where the cold water is good.",
+          "Lake it or leave it is a map of wild swims. Log in and share where the water is good!",
       },
-      { property: "og:title", content: "Frozen Assets · A map of wild swims" },
+      { property: "og:title", content: "Lake it or leave it · A map of wild swims" },
       {
         property: "og:description",
         content: "Drop a pin, add a photo and review your wild swims.",
@@ -101,7 +101,7 @@ function Index() {
     <div className="flex h-screen flex-col overflow-hidden">
       <header className="flex shrink-0 items-center justify-between gap-4 border-b border-border px-6 py-4">
         <div>
-          <h1 className="text-2xl leading-none">Frozen Assets</h1>
+          <h1 className="text-2xl leading-none">Lake it or leave it</h1>
           <p className="label-eyebrow mt-1">A MAP OF SOME PRETTY WILD SWIMS</p>
         </div>
         <nav className="flex items-center gap-2">

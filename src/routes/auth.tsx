@@ -12,13 +12,13 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Sign in · Frozen Assets" },
+      { title: "Sign in · Lake it or leave it" },
       {
         name: "description",
         content:
-          "Sign in to Frozen Assets to log your wild swims.",
+          "Sign in to Lake it or leave it to log your wild swims.",
       },
-      { property: "og:title", content: "Sign in · Frozen Assets" },
+      { property: "og:title", content: "Sign in · Lake it or leave it" },
       {
         property: "og:description",
         content: "Log wild swims.",
@@ -87,7 +87,7 @@ function AuthPage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-6 py-16">
       <Link to="/" className="label-eyebrow mb-10 hover:text-foreground">
-        ← Frozen Assets
+        ← Lake it or leave it
       </Link>
       <div className="surface-frost w-full max-w-sm rounded-lg p-7">
         <h1 className="text-3xl">{mode === "signin" ? "Welcome back in" : "Join the cold"}</h1>

@@ -23,12 +23,12 @@ import {
 export const Route = createFileRoute("/_authenticated/swim/$swimId/edit")({
   head: () => ({
     meta: [
-      { title: "Edit a swim · Frozen Assets" },
+      { title: "Edit a swim · Lake it or leave it" },
       {
         name: "description",
         content: "Change the pin, photo, rating or review of a wild swim you logged.",
       },
-      { property: "og:title", content: "Edit a swim · Frozen Assets" },
+      { property: "og:title", content: "Edit a swim · Lake it or leave it" },
       { property: "og:description", content: "Update the details of a swim you logged." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

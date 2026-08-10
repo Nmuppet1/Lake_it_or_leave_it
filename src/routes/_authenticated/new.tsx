@@ -17,16 +17,16 @@ import { SWIM_METRICS, swimsQueryKey, uploadSwimPhoto } from "@/lib/swims";
 export const Route = createFileRoute("/_authenticated/new")({
   head: () => ({
     meta: [
-      { title: "Log a swim · Frozen Assets" },
+      { title: "Log a swim · Lake it or leave it" },
       {
         name: "description",
         content:
-          "Drop a pin where you swam, add a photo, water temperature, rating and a short review.",
+          "Drop a pin where you swam, add a photo, rating and a short review.",
       },
-      { property: "og:title", content: "Log a swim · Frozen Assets" },
+      { property: "og:title", content: "Log a swim · Lake it or leave it" },
       {
         property: "og:description",
-        content: "Pin the spot, add a photo and log the water temperature.",
+        content: "Pin the spot, add a photo and review.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

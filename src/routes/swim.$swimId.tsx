@@ -14,13 +14,13 @@ import { fetchSwim, swimQueryKey } from "@/lib/swims";
 export const Route = createFileRoute("/swim/$swimId")({
   head: () => ({
     meta: [
-      { title: "A wild swim · Frozen Assets" },
+      { title: "A wild swim · Lake it or leave it" },
       {
         name: "description",
         content:
           "Read the review of this wild swim, see the photo and leave your own notes on the cold water.",
       },
-      { property: "og:title", content: "A wild swim · Frozen Assets" },
+      { property: "og:title", content: "A wild swim · Lake it or leave it" },
       {
         property: "og:description",
         content: "See this wild swim and leave your own notes on the water.",
