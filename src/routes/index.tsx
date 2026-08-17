@@ -99,24 +99,33 @@ function Index() {
 
   return (
     <div className="flex h-screen flex-col overflow-hidden">
-      <header className="flex shrink-0 items-center justify-between gap-4 border-b border-border px-6 py-4">
-        <div>
-          <h1 className="text-2xl leading-none">Lake it or leave it</h1>
-          <p className="label-eyebrow mt-1">A MAP OF SOME PRETTY WILD SWIMS</p>
+      <header className="flex shrink-0 flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-border px-4 py-3 sm:px-6 sm:py-4">
+        <div className="min-w-0">
+          <h1 className="truncate text-lg leading-tight sm:text-2xl sm:leading-none">
+            Lake it or leave it
+          </h1>
+          <p className="label-eyebrow mt-0.5 hidden sm:mt-1 sm:block">
+            A MAP OF SOME PRETTY WILD SWIMS
+          </p>
         </div>
-        <nav className="flex items-center gap-2">
-            {swimOfTheDay ? (
+        <nav className="flex min-w-0 flex-wrap items-center justify-end gap-1.5 sm:gap-2">
+          {swimOfTheDay ? (
             <Button
               size="sm"
               variant="outline"
-              className="border-accent text-accent hover:text-accent"
+              className="max-w-[10rem] border-accent text-accent hover:text-accent sm:max-w-none"
               onClick={revealSwimOfTheDay}
             >
-              Swim of the day: {swimOfTheDay.spot_name}
+              <span className="truncate">
+                <span className="sm:hidden">Swim of the day</span>
+                <span className="hidden sm:inline">
+                  Swim of the day: {swimOfTheDay.spot_name}
+                </span>
+              </span>
             </Button>
           ) : null}
           <Button size="sm" variant="ghost" onClick={() => setPanelOpen((open) => !open)}>
-            {panelOpen ? "Hide swims page" : `Open swims${swims ? ` (${swims.length})` : ""}`}
+            {panelOpen ? "Hide swims" : `Open swims${swims ? ` (${swims.length})` : ""}`}
           </Button>
 
           {user ? (
@@ -134,6 +143,7 @@ function Index() {
               >
                 Sign out
               </Button>
+              <DeleteAccountButton className="px-1" />
             </>
           ) : (
             <Button asChild size="sm" variant="outline">
