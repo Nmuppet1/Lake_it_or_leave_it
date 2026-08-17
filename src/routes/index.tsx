@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { MapCanvas } from "@/components/MapCanvas";
+import { DeleteAccountButton } from "@/components/DeleteAccountButton";
 import { SwimCard } from "@/components/SwimCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
