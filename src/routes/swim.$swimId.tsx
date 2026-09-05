@@ -113,10 +113,10 @@ function SwimDetail() {
           <img
             src={swim.photo_url}
             alt={`Wild swim at ${swim.spot_name}`}
-            className="max-h-96 w-full object-cover"
+            className="h-auto w-full object-contain"
           />
         ) : null}
-        <div className="space-y-3 p-6">
+        <div className="space-y-3 p-5 sm:p-6">
           <div className="flex items-baseline justify-between gap-3">
             <h1 className="text-3xl leading-none">{swim.spot_name}</h1>
             <span className="text-sm text-accent">{"💧".repeat(swim.rating)}</span>

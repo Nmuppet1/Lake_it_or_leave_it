@@ -52,8 +52,9 @@ export default function SwimMap({
   return (
     <MapContainer center={center} zoom={zoom} scrollWheelZoom zoomAnimation fadeAnimation wheelPxPerZoomLevel={120} zoomDelta={1} zoomSnap={0.5} className="h-full w-full">
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+        maxZoom={19}
       />
       {onPick ? <ClickCapture onPick={onPick} /> : null}
       {flyTo ? <FlyTo target={flyTo} /> : null}
