@@ -101,13 +101,20 @@ function Index() {
   return (
     <div className="flex h-screen flex-col overflow-hidden">
       <header className="flex shrink-0 flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-border px-4 py-3 sm:px-6 sm:py-4">
-        <div className="min-w-0">
-          <h1 className="truncate text-lg leading-tight sm:text-2xl sm:leading-none">
-            Lake it or leave it
-          </h1>
-          <p className="label-eyebrow mt-0.5 hidden sm:mt-1 sm:block">
-            A MAP OF SOME PRETTY WILD SWIMS
-          </p>
+        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+          <img
+            src="/w1.png"
+            alt="Lake it or leave it logo"
+            className="h-8 w-8 shrink-0 rounded-md object-contain sm:h-11 sm:w-11"
+          />
+          <div className="min-w-0">
+            <h1 className="truncate text-lg leading-tight sm:text-2xl sm:leading-none">
+              Lake it or leave it
+            </h1>
+            <p className="label-eyebrow mt-0.5 hidden sm:mt-1 sm:block">
+              A MAP OF SOME PRETTY WILD SWIMS
+            </p>
+          </div>
         </div>
         <nav className="flex min-w-0 flex-wrap items-center justify-end gap-1.5 sm:gap-2">
           {swimOfTheDay ? (
