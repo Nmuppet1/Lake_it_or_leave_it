@@ -56,10 +56,10 @@ export default function SwimMap({
       center={center}
       zoom={zoom}
       scrollWheelZoom
-      wheelDebounceTime={40}
-      wheelPxPerZoomLevel={120}
-      zoomDelta={0.5}
-      zoomSnap={0.5}
+      wheelDebounceTime={80}
+      wheelPxPerZoomLevel={180}
+      zoomDelta={1}
+      zoomSnap={1}
       zoomAnimation
       inertia
       easeLinearity={0.2}
