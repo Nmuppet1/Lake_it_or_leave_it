@@ -204,3 +204,10 @@
   background: color-mix(in oklab, var(--color-card) 80%, transparent);
   color: var(--color-muted-foreground);
 }
+
+/* Hide Leaflet zoom buttons on phones while the swims panel is open */
+@media (max-width: 639px) {
+  .leaflet-container.hide-zoom .leaflet-control-zoom {
+    display: none;
+  }
+}
