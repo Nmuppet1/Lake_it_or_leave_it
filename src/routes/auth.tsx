@@ -39,6 +39,7 @@ function AuthPage() {
   const [username, setUsername] = useState("");
   const [busy, setBusy] = useState(false);
   const [awaitingConfirm, setAwaitingConfirm] = useState(false);
+  const [agreed, setAgreed] = useState(false);
 
   useEffect(() => {
     if (!loading && session) void navigate({ to: "/" });
