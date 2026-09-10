@@ -39,6 +39,7 @@ function AuthPage() {
   const [username, setUsername] = useState("");
   const [busy, setBusy] = useState(false);
   const [awaitingConfirm, setAwaitingConfirm] = useState(false);
+  const [agreed, setAgreed] = useState(false);
 
   useEffect(() => {
     if (!loading && session) void navigate({ to: "/" });
@@ -140,7 +141,57 @@ function AuthPage() {
                 autoComplete={mode === "signin" ? "current-password" : "new-password"}
               />
             </div>
-            <Button type="submit" className="w-full" disabled={busy}>
+            {mode === "signup" ? (
+              <div className="space-y-3 rounded-md border border-border bg-secondary/60 p-4">
+                <p className="label-eyebrow">Before you join</p>
+                <ul className="space-y-1.5 text-xs leading-relaxed text-muted-foreground">
+                  <li>
+                    • Your email, username and every swim you log are stored on our servers.
+                  </li>
+                  <li>
+                    • Swims are public: the spot name, map pin, photo, review, ratings, date and
+                    your username are visible to anyone visiting the site, signed in or not.
+                  </li>
+                  <li>
+                    • Photos you upload are public too, including anything visible in them, so
+                    don't upload pictures of other people without their say-so.
+                  </li>
+                  <li>
+                    • Pins reveal a real location. Don't pin private land or anywhere that puts
+                    people at risk, and only log spots you're happy for others to find.
+                  </li>
+                  <li>
+                    • Notes you leave on other swims are public and attached to your username.
+                  </li>
+                  <li>
+                    • Wild swimming carries real risk. Everything here is user-submitted, unchecked
+                    and no promise that a spot is safe or legal — swim at your own risk.
+                  </li>
+                  <li>
+                    • You can edit or delete your own swims any time, and deleting your account
+                    removes your swims and photos.
+                  </li>
+                  <li>
+                    • We may remove content that's unsafe, unlawful or abusive.
+                  </li>
+                </ul>
+                <label className="flex items-start gap-2 text-xs text-foreground/85">
+                  <input
+                    type="checkbox"
+                    required
+                    checked={agreed}
+                    onChange={(event) => setAgreed(event.target.checked)}
+                    className="mt-0.5 size-4 shrink-0 accent-primary"
+                  />
+                  <span>I understand and agree to the above.</span>
+                </label>
+              </div>
+            ) : null}
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={busy || (mode === "signup" && !agreed)}
+            >
               {mode === "signin" ? "Sign in" : "Create account"}
             </Button>
             <Button
@@ -148,7 +199,7 @@ function AuthPage() {
               variant="outline"
               className="w-full"
               onClick={handleGoogle}
-              disabled={busy}
+              disabled={busy || (mode === "signup" && !agreed)}
             >
               Continue with a Google login
             </Button>
