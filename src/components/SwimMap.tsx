@@ -63,13 +63,8 @@ export default function SwimMap({
       zoomAnimation
       inertia
       easeLinearity={0.2}
-
-      zoomAnimation
       fadeAnimation
-      wheelDebounceTime={12}
-      wheelPxPerZoomLevel={220}
-      zoomDelta={0.4}
-      zoomSnap={0}
+
       className={`h-full w-full${hideZoom ? " hide-zoom" : ""}`}
     >
       <TileLayer
