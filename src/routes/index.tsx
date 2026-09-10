@@ -163,7 +163,7 @@ function Index() {
 
       <div className="relative flex min-h-0 flex-1">
         <main className="min-h-0 flex-1">
-          <MapCanvas swims={filtered} />
+          <MapCanvas swims={filtered} hideZoom={panelOpen} />
         </main>
 
         {!panelOpen ? (
