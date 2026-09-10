@@ -39,6 +39,7 @@ export type SwimMapProps = {
   center?: [number, number];
   zoom?: number;
   flyTo?: { lat: number; lng: number; zoom?: number } | null;
+  hideZoom?: boolean;
 };
 
 export default function SwimMap({
@@ -48,9 +49,21 @@ export default function SwimMap({
   center = [54.5, -3.5],
   zoom = 5,
   flyTo = null,
+  hideZoom = false,
 }: SwimMapProps) {
   return (
-    <MapContainer center={center} zoom={zoom} scrollWheelZoom zoomAnimation fadeAnimation wheelPxPerZoomLevel={120} zoomDelta={1} zoomSnap={0.5} className="h-full w-full">
+    <MapContainer
+      center={center}
+      zoom={zoom}
+      scrollWheelZoom
+      zoomAnimation
+      fadeAnimation
+      wheelDebounceTime={12}
+      wheelPxPerZoomLevel={220}
+      zoomDelta={0.4}
+      zoomSnap={0}
+      className={`h-full w-full${hideZoom ? " hide-zoom" : ""}`}
+    >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
         url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
