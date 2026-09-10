@@ -199,7 +199,7 @@ function AuthPage() {
               variant="outline"
               className="w-full"
               onClick={handleGoogle}
-              disabled={busy}
+              disabled={busy || (mode === "signup" && !agreed)}
             >
               Continue with a Google login
             </Button>
